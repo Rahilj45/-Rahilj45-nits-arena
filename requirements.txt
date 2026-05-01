@@ -7,7 +7,7 @@ asyncpg==0.29.0
 alembic==1.13.1
 
 # HTTP client
-aiohttp==3.9.5
+aiohttp==3.13.3
 
 # Environment variables
 python-dotenv==1.0.1
