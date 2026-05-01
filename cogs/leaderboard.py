@@ -6,7 +6,7 @@ from typing import List, Optional
 
 import disnake
 from disnake.ext import commands
-from sqlalchemy import select
+from sqlalchemy import func, select
 
 from database.models import User
 from database.session import get_session
@@ -51,10 +51,9 @@ class LeaderboardCog(commands.Cog, name="Leaderboard"):
                 )
             ).scalars().all()
 
-            from sqlalchemy import func as sqlfunc
             total_count: int = (
                 await session.execute(
-                    select(sqlfunc.count()).select_from(User).where(User.is_verified.is_(True))
+                    select(func.count()).select_from(User).where(User.is_verified.is_(True))
                 )
             ).scalar_one()
 

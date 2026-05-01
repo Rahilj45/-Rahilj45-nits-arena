@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 from typing import AsyncGenerator
+from urllib.parse import urlparse
 
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
@@ -62,7 +63,10 @@ def init_db(database_url: str | None = None) -> None:
     global _engine, _async_session_factory  # noqa: PLW0603
 
     url = database_url or _build_database_url()
-    logger.info("Initialising database engine: %s", url.split("@")[-1])  # hide credentials
+    # Log only the host/port/db path — never credentials — by re-parsing the URL
+    parsed = urlparse(url)
+    safe_location = f"{parsed.hostname}:{parsed.port}{parsed.path}"
+    logger.info("Initialising database engine: %s", safe_location)
 
     _engine = create_async_engine(
         url,
