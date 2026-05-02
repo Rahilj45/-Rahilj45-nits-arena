@@ -102,7 +102,7 @@ class VerificationCog(commands.Cog, name="Verification"):
             ),
             colour=disnake.Colour.orange(),
         )
-        embed.set_footer(text="Token expires in 30 minutes.")
+        embed.set_footer(text="If needed, rerun `/verify` to generate a new token.")
         await inter.followup.send(embed=embed, ephemeral=True)
 
     # ------------------------------------------------------------------
