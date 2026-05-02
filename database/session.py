@@ -117,8 +117,9 @@ async def get_session() -> AsyncGenerator[AsyncSession, None]:
 
 async def close_db() -> None:
     """Dispose the engine and release all pooled connections."""
-    global _engine  # noqa: PLW0603
+    global _engine, _async_session_factory  # noqa: PLW0603
     if _engine is not None:
         await _engine.dispose()
         logger.info("Database engine disposed.")
         _engine = None
+        _async_session_factory = None
