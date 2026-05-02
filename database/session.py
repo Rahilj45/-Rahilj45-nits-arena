@@ -96,9 +96,9 @@ async def create_tables() -> None:
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
     """Async generator that yields a database session.
 
-    Intended for use as a dependency or context manager::
+    Intended for use as a dependency or via async iteration::
 
-        async with get_session() as session:
+        async for session in get_session():
             ...
 
     Yields:
