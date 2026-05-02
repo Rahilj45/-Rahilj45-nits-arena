@@ -87,7 +87,6 @@ async def create_tables() -> None:
     Intended for development/testing. Production deployments should use
     Alembic migrations instead.
     """
-    global _engine  # noqa: PLW0603
     assert _engine is not None, "Call init_db() before create_tables()."
     async with _engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
