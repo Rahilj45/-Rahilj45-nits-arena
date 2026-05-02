@@ -36,14 +36,21 @@ class RateLimiter:
 
     async def acquire(self) -> None:
         async with self._lock:
-            now = time.monotonic()
-            # Drop timestamps outside the window
-            self._calls = [t for t in self._calls if now - t < self._period]
-            if len(self._calls) >= self._max_calls:
+            while True:
+                now = time.monotonic()
+                # Drop timestamps outside the window
+                self._calls = [t for t in self._calls if now - t < self._period]
+                if len(self._calls) < self._max_calls:
+                    self._calls.append(now)
+                    return
+
                 sleep_for = self._period - (now - self._calls[0])
                 if sleep_for > 0:
                     await asyncio.sleep(sleep_for)
-            self._calls.append(time.monotonic())
+                else:
+                    # Clock advanced enough that the oldest timestamp should
+                    # expire on the next loop iteration.
+                    await asyncio.sleep(0)
 
 
 _rate_limiter = RateLimiter(_RATE_LIMIT_CALLS, _RATE_LIMIT_PERIOD)
